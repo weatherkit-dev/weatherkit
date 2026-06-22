@@ -1,3 +1,5 @@
+import os
+
 import httpx
 
 from weatherkit.cache import TTLCache
@@ -7,9 +9,9 @@ BASE_URL = "https://api.example-weather.test/v1"
 
 
 class WeatherClient:
-    def __init__(self, api_key: str, timeout: float = 10.0):
+    def __init__(self, api_key: str, timeout: float | None = None):
         self.api_key = api_key
-        self.timeout = timeout
+        self.timeout = timeout if timeout is not None else float(os.environ.get("WEATHERKIT_TIMEOUT", "10"))
         self.cache = TTLCache(ttl_seconds=600)
 
     def current(self, city: str) -> dict:
