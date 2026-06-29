@@ -2,6 +2,7 @@ import os
 
 import httpx
 
+from weatherkit.alerts import Alert, parse_alerts
 from weatherkit.cache import TTLCache
 from weatherkit.errors import WeatherAPIError
 
@@ -32,3 +33,9 @@ class WeatherClient:
         if response.status_code != 200:
             raise WeatherAPIError(response.status_code, response.text)
         return response.json()["days"]
+
+    def alerts(self, city: str) -> list[Alert]:
+        response = httpx.get(f"{BASE_URL}/alerts", params={"q": city, "key": self.api_key}, timeout=self.timeout)
+        if response.status_code != 200:
+            raise WeatherAPIError(response.status_code, response.text)
+        return parse_alerts(response.json())
