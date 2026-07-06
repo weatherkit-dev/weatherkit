@@ -15,9 +15,14 @@ def main() -> None:
     forecast.add_argument("city")
     forecast.add_argument("--days", type=int, default=3)
     forecast.add_argument("--units", choices=["metric", "imperial"], default="metric")
+    alerts = sub.add_parser("alerts")
+    alerts.add_argument("city")
     args = parser.parse_args()
     client = WeatherClient(api_key=os.environ["WEATHERKIT_API_KEY"])
     if args.command == "current":
         print(format_current(client.current(args.city), args.units))
-    else:
+    elif args.command == "forecast":
         print(format_forecast(client.forecast(args.city, args.days), args.units))
+    else:
+        for alert in client.alerts(args.city):
+            print(f"{alert.severity.name}: {alert.title} ({alert.area})")
