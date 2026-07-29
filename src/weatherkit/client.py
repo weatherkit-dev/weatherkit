@@ -4,9 +4,17 @@ import httpx
 
 from weatherkit.alerts import Alert, parse_alerts
 from weatherkit.cache import TTLCache
-from weatherkit.errors import WeatherAPIError
+from weatherkit.errors import RateLimitError, WeatherAPIError
 
 BASE_URL = "https://api.example-weather.test/v1"
+
+
+def _check(response: httpx.Response) -> None:
+    if response.status_code == 429:
+        retry_after = response.headers.get("Retry-After")
+        raise RateLimitError(response.text, int(retry_after) if retry_after else None)
+    if response.status_code != 200:
+        raise WeatherAPIError(response.status_code, response.text)
 
 
 class WeatherClient:
@@ -20,8 +28,7 @@ class WeatherClient:
         if cached is not None:
             return cached
         response = httpx.get(f"{BASE_URL}/current", params={"q": city, "key": self.api_key}, timeout=self.timeout)
-        if response.status_code != 200:
-            raise WeatherAPIError(response.status_code, response.text)
+        _check(response)
         data = response.json()
         self.cache.set(city, data)
         return data
@@ -30,12 +37,10 @@ class WeatherClient:
         if not 1 <= days <= 7:
             raise ValueError("days must be between 1 and 7")
         response = httpx.get(f"{BASE_URL}/forecast", params={"q": city, "days": days, "key": self.api_key}, timeout=self.timeout)
-        if response.status_code != 200:
-            raise WeatherAPIError(response.status_code, response.text)
+        _check(response)
         return response.json()["days"]
 
     def alerts(self, city: str) -> list[Alert]:
         response = httpx.get(f"{BASE_URL}/alerts", params={"q": city, "key": self.api_key}, timeout=self.timeout)
-        if response.status_code != 200:
-            raise WeatherAPIError(response.status_code, response.text)
+        _check(response)
         return parse_alerts(response.json())
