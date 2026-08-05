@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import lru_cache
 
 import httpx
 
@@ -13,6 +14,7 @@ class Place:
     longitude: float
 
 
+@lru_cache(maxsize=256)
 def lookup(city: str, api_key: str, timeout: float = 10.0) -> Place:
     """Return the best match for a city name."""
     response = httpx.get(GEOCODING_URL, params={"q": city, "key": api_key, "limit": 1}, timeout=timeout)
