@@ -1,6 +1,8 @@
 # weatherkit
 
-A small Python library and command-line tool to fetch and format weather data.
+A small Python library and command-line tool to fetch and format weather data: current conditions, forecasts and alerts.
+
+Requires Python 3.11 or later.
 
 ## Install
 
@@ -15,5 +17,6 @@ A small Python library and command-line tool to fetch and format weather data.
 ## Command line
 
     weatherkit current Madrid --units metric
+    weatherkit alerts Madrid
 
 See docs/usage.md for every command and docs/configuration.md for settings.
