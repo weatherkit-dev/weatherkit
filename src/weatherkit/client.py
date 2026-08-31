@@ -38,7 +38,7 @@ class WeatherClient:
             raise ValueError("days must be between 1 and 7")
         response = httpx.get(f"{BASE_URL}/forecast", params={"q": city, "days": days, "key": self.api_key}, timeout=self.timeout)
         _check(response)
-        return response.json()["days"]
+        return response.json().get("days") or []
 
     def alerts(self, city: str) -> list[Alert]:
         response = httpx.get(f"{BASE_URL}/alerts", params={"q": city, "key": self.api_key}, timeout=self.timeout)
