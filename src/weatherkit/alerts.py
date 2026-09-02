@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 
 
@@ -26,5 +26,7 @@ def parse_alerts(payload: dict) -> list[Alert]:
     ]
 
 
-def active(alerts: list[Alert], now: datetime) -> list[Alert]:
-    return [a for a in alerts if a.expires > now]
+def active(alerts: list[Alert], now: datetime | None = None) -> list[Alert]:
+    """Alerts that have not expired. Times are compared in UTC."""
+    now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    return [a for a in alerts if a.expires.astimezone(timezone.utc) > now]
