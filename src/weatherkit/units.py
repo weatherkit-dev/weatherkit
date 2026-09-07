@@ -12,3 +12,7 @@ def kmh_to_mph(kmh: float) -> float:
 
 def hpa_to_inhg(hpa: float) -> float:
     return hpa * 0.0295299830714
+
+
+def celsius_to_kelvin(celsius: float) -> float:
+    return celsius + 273.15
