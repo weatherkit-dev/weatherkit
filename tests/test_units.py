@@ -1,4 +1,4 @@
-from weatherkit.units import celsius_to_fahrenheit, fahrenheit_to_celsius, kmh_to_mph
+from weatherkit.units import celsius_to_fahrenheit, celsius_to_kelvin, fahrenheit_to_celsius, kmh_to_mph
 
 
 def test_round_trip():
@@ -11,3 +11,7 @@ def test_freezing_point():
 
 def test_wind_speed():
     assert round(kmh_to_mph(100), 2) == 62.14
+
+
+def test_kelvin():
+    assert celsius_to_kelvin(0) == 273.15
