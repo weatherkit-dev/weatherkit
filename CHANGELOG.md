@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2026-09-28)
+
+- First stable release. No API changes since 1.0.0-rc.1.
+- Empty forecast responses return an empty list.
+- Alert expiry is compared in UTC.
+- Kelvin conversion.
+
 ## 1.0.0-rc.1 (2026-08-24)
 
 - RateLimitError for 429 responses; WeatherAPIError keeps the response body.
