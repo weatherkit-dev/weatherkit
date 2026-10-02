@@ -14,6 +14,7 @@ class TTLCache:
             return None
         stored_at, value = entry
         if time.monotonic() - stored_at > self.ttl_seconds:
+            del self._store[key]
             return None
         return value
 
