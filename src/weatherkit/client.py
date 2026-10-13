@@ -2,6 +2,7 @@ import os
 
 import httpx
 
+from weatherkit.air_quality import AirQuality, parse_air_quality
 from weatherkit.alerts import Alert, parse_alerts
 from weatherkit.cache import TTLCache
 from weatherkit.errors import RateLimitError, WeatherAPIError
@@ -44,3 +45,8 @@ class WeatherClient:
         response = httpx.get(f"{BASE_URL}/alerts", params={"q": city, "key": self.api_key}, timeout=self.timeout)
         _check(response)
         return parse_alerts(response.json())
+
+    def air_quality(self, city: str) -> AirQuality:
+        response = httpx.get(f"{BASE_URL}/air-quality", params={"q": city, "key": self.api_key}, timeout=self.timeout)
+        _check(response)
+        return parse_air_quality(response.json())

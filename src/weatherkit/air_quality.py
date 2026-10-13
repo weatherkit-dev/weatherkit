@@ -16,3 +16,7 @@ def band(pm10: float) -> str:
         if pm10 <= limit:
             return name
     return "extremely poor"
+
+
+def parse_air_quality(payload: dict) -> AirQuality:
+    return AirQuality(payload["city"], payload["pm2_5"], payload["pm10"])
