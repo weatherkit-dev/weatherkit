@@ -9,6 +9,7 @@ from weatherkit.formatting import format_current, format_forecast
 def main() -> None:
     parser = argparse.ArgumentParser(prog="weatherkit")
     parser.add_argument("--json", action="store_true", help="print the raw response as JSON")
+    parser.add_argument("--units", choices=["metric", "imperial"], default="metric")
     sub = parser.add_subparsers(dest="command", required=True)
     current = sub.add_parser("current")
     current.add_argument("city")
