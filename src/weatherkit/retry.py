@@ -1,3 +1,4 @@
+import random
 import time
 
 from weatherkit.errors import RateLimitError
@@ -12,4 +13,5 @@ def with_backoff(call, retries: int = 3, base_delay: float = 1.0, max_total: flo
         except RateLimitError as error:
             if attempt == retries or time.time() - started > max_total:
                 raise
-            time.sleep(error.retry_after or base_delay * 2 ** attempt)
+            delay = error.retry_after or base_delay * 2 ** attempt
+            time.sleep(delay + random.uniform(0, delay / 2))
